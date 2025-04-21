@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 
 from pyorbbecsdk import *
-from utils import frame_to_bgr_image
+from BRAVO_AGV.vision.scripts.utils import frame_to_bgr_image
 
 # import ros dependencies
 import rclpy
@@ -35,11 +35,12 @@ class Orbbec_Det(Node):
         self.obpose_pub = self.create_publisher(Point, 'ttube_center', 10)
 
     def pubObjpose(self, x, y, z):
-        msg = Point
-        msg.x = x
-        msg.y = y
-        msg.z = z
+        msg = Point()
+        msg.x = float(x)
+        msg.y = float(y)
+        msg.z = float(z)
         self.obpose_pub.publish(msg)
+        
 
 def color_detect(img, img_d):
     #Definimos los parametros de la máscara roja
@@ -87,8 +88,8 @@ def color_detect(img, img_d):
     return ttubemask, ttubemaskVis_depth, ttube_center
 
 
-def main(argv):
-    rclpy.init(args=args)
+def main(argv = 0):
+    
     pipeline = Pipeline()
     device = pipeline.get_device()
     device_info = device.get_device_info()
@@ -102,6 +103,7 @@ def main(argv):
     args = parser.parse_args()
     align_mode = args.mode
     enable_sync = args.enable_sync
+    rclpy.init(args=None)
     try:
         orbbec_detection = Orbbec_Det()
         profile_list = pipeline.get_stream_profile_list(OBSensorType.COLOR_SENSOR)
@@ -180,7 +182,7 @@ def main(argv):
             if ttube_center != [0.0, 0.0]:
                 depth_center = depth_data[ttube_center_f[0], ttube_center_f[1]]
                 if depth_center > 0:
-                    orbbec_detection.obpose_pub(ttube_center[0], ttube_center[0], depth_center)
+                    orbbec_detection.pubObjpose(ttube_center[0], ttube_center[0], depth_center)
             #print(depth_data.shape)
 
 
@@ -197,4 +199,4 @@ def main(argv):
 if __name__ == "__main__":
     print("Please NOTE: This example is NOT supported by the Gemini 330 series.")
     print("If you want to see the example on Gemini 330 series, please refer to align_filter_viewer.py")
-    main(sys.argv[1:])
+    main()

@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'bravo_node = BRAVO_AGV.bravo_node:main'
-	    'orbbec_det = BRAVO_AGV.ros_color_depth:main'
+            'bravo_node = BRAVO_AGV.bravo_node:main',
+            'orbbec_det = BRAVO_AGV.vision.scripts.ros_color_depth:main',
         ],
     },
 )
