@@ -1,25 +1,35 @@
 import serial
 from time import sleep
 
-ser = serial.Serial("/dev/ttyAMA0", 9600)
+"""
+Config UART section
+"""
+ser = serial.Serial("/dev/ttyAMA0", 115200)
 print("Configuration ready")
 print(ser.name)
-value1 = 10.51
-value = str(value1)
 newline = "\n"
+
+
+# Obtaining values
+value1 = 10.51
+value2 = 11.23
+
+# Encoding values
+value1n = str(value1)
+value2n = str(value2)
+
 i = 0
 while True:
-	#received_date = ser.read()
-	#sleep(0.03)
-	#data_left = ser.inWaiting()
-	#received_data += ser.read(data_left)
-	#print(received_data)
-	#ser.write(b'hello F \n')
-	ser.write(b'1n')
-	ser.write((value.encode()+newline.encode()))
-	sleep(0.03)
-	i+=1
-	if (i == 10):
+	try:
+		ser.write(b'1 \n')
+		ser.write((value1n.encode()+newline.encode()))
+		ser.write(b'2 \n')
+		ser.write((value2n.encode()+newline.encode()))
+		sleep(0.03)
+		i+=1
+		if (i == 10):
+			break
+	except KeyboardInterrupt:
 		break
 print("closing")
 ser.close()
