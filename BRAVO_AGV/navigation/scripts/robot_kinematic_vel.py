@@ -3,7 +3,7 @@ from math import pi
 from time import sleep
 
 def rpm(ms, w):
-    v_rpm = ms*w*2*pi/60
+    v_rpm = ms/w*2*pi/60
     return v_rpm
 
 """
@@ -18,17 +18,17 @@ newline = "\n"
 Robot Kinematics Definition
 """
 
-V = 0.1
-w = 0.1
+V = 1.1
+w = 1.1
 
-l = 0.8
+l = 0.5
 w_r = 0.1016
 
 vr = (2*V + l*w)/2
 vl = (2*V - l*w)/2
 
-vr_rpm = rpm(vr, w_r)
-vl_rpm = rpm(vl, w_r)
+vr_rpm = round(rpm(vr, w_r), 6)
+vl_rpm = round(rpm(vl, w_r), 6)
 
 
 """
@@ -37,6 +37,8 @@ UART Encoding and communication
 # Encoding values
 vrn = str(vr_rpm)
 vln = str(vl_rpm)
+print(vrn)
+print(vln)
 
 i = 0
 
@@ -46,7 +48,7 @@ while True:
         ser.write((vrn.encode()+newline.encode()))
         ser.write(b'2 \n')
         ser.write((vln.encode()+newline.encode()))
-        sleep(0.03)
+        sleep(0.01)
 
     except KeyboardInterrupt:
         break

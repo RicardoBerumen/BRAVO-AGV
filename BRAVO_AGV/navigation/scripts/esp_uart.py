@@ -11,12 +11,14 @@ newline = "\n"
 
 
 # Obtaining values
-value1 = 10.51
+value1 = 1.4172210953694113
 value2 = 11.23
 
 # Encoding values
 value1n = str(value1)
 value2n = str(value2)
+print(value1n)
+print(value2n)
 
 i = 0
 while True:
