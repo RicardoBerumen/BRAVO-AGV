@@ -2,6 +2,17 @@ import serial
 from math import pi
 from time import sleep
 
+import rclpy
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
+from geometry_msgs.msg import Point
+
+class robot_control(Node):
+    """
+    A node to read the velocity topic and write the necessary uart commands
+    """
+    def __init__(self):
+        super().__init__("robot_control")
 
 
 def rpm(ms, w):
