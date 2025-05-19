@@ -1,3 +1,4 @@
+import sys
 import serial
 from math import pi
 from time import sleep
@@ -24,8 +25,6 @@ class robot_control(Node):
         """
         Robot Kinematics Definition
         """
-        
-
         self.l = 0.5
         self.w_r = 0.1016
     
@@ -40,9 +39,10 @@ class robot_control(Node):
         self.newline = "\n"
 
     def vel_callback(self, msg):
-        self.get_logger().info("I heard: %d", %msg.linear.x)
         self.V = msg.linear.x
         self.w = msg.angular.z
+        self.get_logger().info('Linear Velocity: "{0}"'.format(msg.linear.x))
+        self.get_logger().info('Angular Velocity: "{0}"'.format(msg.linear.z))
 
         V = self.V
         w = self.w
@@ -77,15 +77,16 @@ class robot_control(Node):
             ser.write((vln.encode()+newline.encode()))
             sleep(0.01)
 
-        except KeyboardInterrupt:
+        except KeyboardInterrupt or ExternalShutdownException:
             print("closing")
-        ser.close()
+            ser.close()
 
 
 
 def rpm(ms, w):
     v_rpm = ms/w*2*pi/60
-    return round(v_rpm, 6)
+    v_rpm = round(v_rpm, 6)
+    return v_rpm,
 
 def main(args = None):
 
@@ -93,12 +94,17 @@ def main(args = None):
     ROS Node
     """
     rclpy.init(args=args)
-    velocity_subscriber = robot_control()
-    rclpy.spin(velocity_subscriber)
-    
-    # destroy node
-    velocity_subscriber.destroy_node()
-    rclpy.shutdown()
-
+    try:
+        velocity_subscriber = robot_control()
+        rclpy.spin(velocity_subscriber)
+    except KeyboardInterrupt:
+        pass
+    except ExternalShutdownException:
+        sys.exit(1)
+    finally:
+        # destroy node
+        rclpy.try_shutdown()
+        velocity_subscriber.destroy_node()
+        
 if __name__ == '__main__':
     main()
