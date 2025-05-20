@@ -25,7 +25,7 @@ class robot_control(Node):
         """
         Robot Kinematics Definition
         """
-        self.l = 0.5
+        self.l = 0.63
         self.w_r = 0.1016
     
     def uart_config(self):
@@ -42,7 +42,7 @@ class robot_control(Node):
         self.V = msg.linear.x
         self.w = msg.angular.z
         self.get_logger().info('Linear Velocity: "{0}"'.format(msg.linear.x))
-        self.get_logger().info('Angular Velocity: "{0}"'.format(msg.linear.z))
+        self.get_logger().info('Angular Velocity: "{0}"'.format(msg.angular.z))
 
         V = self.V
         w = self.w
@@ -103,6 +103,7 @@ def main(args = None):
         sys.exit(1)
     finally:
         # destroy node
+        velocity_subscriber.ser.close()
         rclpy.try_shutdown()
         velocity_subscriber.destroy_node()
         
