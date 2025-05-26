@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'bravo_node = BRAVO_AGV.bravo_node:main',
             'orbbec_det = BRAVO_AGV.vision.scripts.ros_color_depth:main',
+            'inicializar_camara = BRAVO_AGV.vision.Codigos.inicializar_camara:main',
         ],
     },
 )
