@@ -15,9 +15,7 @@ class Solo_RGB (Node):
         super().__init__('rgb_only_detection_node')
         self.bridge = CvBridge()
 
-        from rclpy.qos import qos_profile_sensor_data
-        self.create_subscription(Image, 'camera/rgb/image_raw', self.rgb_callback, qos_profile_sensor_data)
-
+        self.create_subscription(Image, 'camera/rgb/image_raw', self.rgb_callback, 10)
         self.x_pub = self.create_publisher(Float32, 'object/center_x', 10)
         self.y_pub = self.create_publisher(Float32, 'object/center_y', 10)
 
@@ -34,7 +32,7 @@ class Solo_RGB (Node):
 
     def rgb_callback(self, msg):
         cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='rgb8')
-        self.rgb_frame = cv_img
+        self.rgb_frame = cv2.cvtColor(cv_img, cv2.COLOR_RGB2BGR)
 
     def process_frame(self):
         if self.rgb_frame is None:
