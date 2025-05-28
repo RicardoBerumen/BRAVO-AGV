@@ -16,7 +16,7 @@ class Solo_RGB (Node):
         self.bridge = CvBridge()
 
         from rclpy.qos import qos_profile_sensor_data
-        self.create_subscription(Image, 'camera/rgb/image_raw', self.rgb_callback, qos_profile_sensor_data)
+        self.create_subscription(Image, '/out/compressed', self.rgb_callback, qos_profile_sensor_data)
 
         self.x_pub = self.create_publisher(Float32, 'object/center_x', 10)
         self.y_pub = self.create_publisher(Float32, 'object/center_y', 10)
