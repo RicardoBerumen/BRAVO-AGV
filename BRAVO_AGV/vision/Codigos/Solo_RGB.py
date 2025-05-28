@@ -28,7 +28,7 @@ class Solo_RGB (Node):
         self.model = YOLO('/home/evo/ros0_ws/src/bravo_agv/BRAVO_AGV/vision/Codigos/coca-cola-can-detection.yolov12/runs/train/EVO1/weights/best.pt')
 
         cv2.namedWindow('Detección RGB', cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('Detección RGB', 960, 720)
+        # cv2.resizeWindow('Detección RGB', 960, 720)
 
         self.create_timer(1.0 / 30.0, self.process_frame)
 
