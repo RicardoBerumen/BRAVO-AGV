@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge
+from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Float32
 import numpy as np
 import cv2
 import torch
 from ultralytics import YOLO
 
-class Solo_RGB (Node):
+class Solo_RGB(Node):
     def __init__(self):
         super().__init__('rgb_only_detection_node')
-        self.bridge = CvBridge()
 
         from rclpy.qos import qos_profile_sensor_data
-        self.create_subscription(Image, '/out/compressed', self.rgb_callback, qos_profile_sensor_data)
+        self.create_subscription(CompressedImage, '/out/compressed', self.rgb_callback, qos_profile_sensor_data)
 
         self.x_pub = self.create_publisher(Float32, 'object/center_x', 10)
         self.y_pub = self.create_publisher(Float32, 'object/center_y', 10)
@@ -28,13 +28,11 @@ class Solo_RGB (Node):
         self.model = YOLO('/home/evo/ros0_ws/src/bravo_agv/BRAVO_AGV/vision/Codigos/coca-cola-can-detection.yolov12/runs/train/EVO1/weights/best.pt')
 
         cv2.namedWindow('Detección RGB', cv2.WINDOW_NORMAL)
-        # cv2.resizeWindow('Detección RGB', 960, 720)
-
         self.create_timer(1.0 / 30.0, self.process_frame)
 
-    def rgb_callback(self, msg):
-        cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='rgb8')
-        self.rgb_frame = cv_img
+    def rgb_callback(self, msg: CompressedImage):
+        np_arr = np.frombuffer(msg.data, np.uint8)
+        self.rgb_frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # ya en BGR
 
     def process_frame(self):
         if self.rgb_frame is None:
