@@ -104,7 +104,7 @@ def main():
     ROS_DISTRO = os.environ.get('ROS_DISTRO')
     qos = QoSProfile(depth=10)
     node = rclpy.create_node('teleop_keyboard')
-    pub = node.create_publisher(Twist, 'cmd_vel', qos)
+    pub = node.create_publisher(Twist, '/cmd_vel', qos)
     
 
     status = 0
