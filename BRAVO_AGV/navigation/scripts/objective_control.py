@@ -6,6 +6,7 @@ from time import sleep
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
+from rclpy.qos import QoSProfile
 from geometry_msgs.msg import PointStamped, Twist
 
 class obj_control(Node):
@@ -31,11 +32,15 @@ class obj_control(Node):
         self.kpr = 1
         self.kpt = 1
         self.kgamma = 1
-        self.v_max = 5
+        self.v_max = 3
 
         self.x = 0
         self.y = 0
         self.theta = 0
+        self.z_d = 0
+        self.x_d = 0
+        self.y_d = 0
+        self.get_clock().now()
         self.tiempo = self.get_clock().now().nanoseconds/1000000000
         self.tiempo_ant = self.tiempo
 
@@ -58,7 +63,10 @@ class obj_control(Node):
             self.d = x_df - self.x
             self.gamma = -tanh((self.kgamma)*abs(thetae))+1
 
-            self.V = self.gamma*self.v_max*tanh((self.kpt*self.d**2)/self.v_max)
+            if self.d > self.l:
+                self.V = self.gamma*self.v_max*tanh((self.kpt*self.d**2)/self.v_max)
+            else:
+                self.V = 0
 
             twist = Twist()
             twist.linear.x = self.V

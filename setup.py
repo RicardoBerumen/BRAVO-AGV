@@ -24,6 +24,7 @@ setup(
             'orbbec_det = BRAVO_AGV.vision.scripts.ros_color_depth:main',
             'robot_control = BRAVO_AGV.navigation.scripts.robot_kinematics_ros:main',
             'teleop_keyboard = BRAVO_AGV.navigation.scripts.agv_teleop:main',
+            'obj_control = BRAVO_AGV.navigation.scripts.objective_control:main'
         ],
     },
 )
