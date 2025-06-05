@@ -17,7 +17,7 @@ class robot_control(Node):
         self.uart_config()
         self.vel_subscription = self.create_subscription(
             Twist,
-            'cmd_vel',
+            '/cmd_vel',
             self.vel_callback,
             10
         )
