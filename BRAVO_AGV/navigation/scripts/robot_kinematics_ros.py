@@ -84,7 +84,7 @@ class robot_control(Node):
 
 
 def rpm(ms, w):
-    v_rpm = ms/w*2*pi/60
+    v_rpm = ms/(w*2*pi)*60
     v_rpm = round(v_rpm, 6)
     return v_rpm,
 
